@@ -23,7 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Visual Studio Code
-.code-workspace
+*.code-workspace
 
 # Cypress
 **/cypress/videos
