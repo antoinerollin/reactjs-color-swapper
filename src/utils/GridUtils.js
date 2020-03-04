@@ -1,6 +1,6 @@
 /**
  * GridUtils
- * This class contains usefull method for grid creation and grid edition.
+ * This class contains usefull methods for grid creation and grid edition.
  */
 export default class GridUtils {
 
