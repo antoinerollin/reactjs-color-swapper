@@ -1,0 +1,7 @@
+@import '../common/mixins';
+
+.App {
+  @include bs-container;
+  text-align: center;
+  color: white;
+}

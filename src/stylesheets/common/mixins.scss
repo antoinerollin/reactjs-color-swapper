@@ -1,0 +1,49 @@
+@import './constants.scss';
+
+@mixin flex($display : flex, $align-items: stretch, $justify-content: flex-start, $flex-direction: row){
+    display: $display;
+    
+    align-items: $align-items;
+    -webkit-align-items: $align-items;
+
+    justify-content: $justify-content;
+    -webkit-justify-content: $justify-content;
+
+    flex-direction: $flex-direction;
+    -webkit-flex-direction: $flex-direction;
+}
+
+@mixin bs-container {
+    padding-right: 15px;
+    padding-left: 15px;
+
+    margin-top: 10%;
+    margin-right: auto;
+    margin-left: auto;
+
+    @media (min-width: $bs-min-lg) {
+        width: 1170px;
+    }
+    @media (min-width: $bs-min-md) {
+        width: 970px;
+    }
+    @media (min-width: $bs-min-sm) {
+        width: 750px;
+    }
+}
+
+@mixin material-icons {
+    direction: ltr;
+    display: inline-block;
+    font-family: 'Material Icons';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}

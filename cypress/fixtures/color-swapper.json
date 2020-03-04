@@ -1,0 +1,11 @@
+{
+  "pages": {
+    "root": "/"
+  },
+  "selectors": {
+    "draggableCell": "[data-cy=draggable-cell]",
+    "droppableCell": "[data-cy=droppable-cell]",
+    "undoButton": "[data-cy=undo-button]",
+    "resetButton": "[data-cy=reset-button]"
+  }
+}

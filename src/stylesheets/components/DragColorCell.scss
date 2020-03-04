@@ -1,0 +1,29 @@
+@import '../common/constants';
+@import '../common/mixins';
+@import '../common/keyframes';
+
+.drag-color-cell {
+    @include flex(inline-flex, center, center);
+
+    color: white;
+    background-color: transparent;
+    text-shadow: 0 0 4px black; 
+
+    width: $cell-size;
+    height: $cell-size;
+
+    &.dragged {
+        position: relative;
+
+        &:after {
+            @include material-icons;
+            position: absolute;
+            content: 'all_out';
+        }
+    }
+
+    @media (max-width: $bs-max-xs) {
+        width: $cell-size-xs;
+        height: $cell-size-xs;
+    }
+}

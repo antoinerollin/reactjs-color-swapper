@@ -1,0 +1,14 @@
+@import '../common/constants';
+@import '../common/mixins';
+@import '../common/keyframes';
+
+.drop-color-cell {
+    cursor: move;
+    display: inline-block;
+    border : 2px solid white;
+
+    &.droppable {
+        animation: blink 1.5s linear infinite;
+        border-color: black;
+    }
+}
