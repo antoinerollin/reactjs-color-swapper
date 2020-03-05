@@ -1,10 +1,10 @@
 # Color Swapper Project
-The Color Swapper project is a ReactJS component-based application.
+The Color Swapper project is a ReactJS component-based application.<br/>
 The application corresponds to a grid of alternative cell colors, in which the cells can be reordered through drag and drop actions. 
 
 ## Requirements
-This project requires npm to successfully run. 
-You can download npm through Node.js here: https://www.npmjs.com/get-npm
+This project requires npm to successfully run.<br/>
+You can download npm through Node.js here: https://www.npmjs.com/get-npm<br/>
 Documentation: https://docs.npmjs.com/
 
 ## Scripts
