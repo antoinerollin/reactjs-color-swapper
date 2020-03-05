@@ -1,6 +1,6 @@
 import React from 'react';
-import ColorSwapper from './ColorSwapper';
 import '../stylesheets/components/App.scss';
+import ColorSwapper from './ColorSwapper';
 
 /**
  * Welcome to the ColorSwapper application using ReactJS !

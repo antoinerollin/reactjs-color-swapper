@@ -1,9 +1,9 @@
 import React from 'react';
-import { DndProvider } from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
-import DropColorCell from './DropColorCell';
-import DragColorCell from './DragColorCell';
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
 import '../stylesheets/components/ColorGrid.scss';
+import DragColorCell from './DragColorCell';
+import DropColorCell from './DropColorCell';
 
 /**
  * ColorGrid component

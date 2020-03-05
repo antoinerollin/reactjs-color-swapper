@@ -3,7 +3,6 @@
  * Here is a way to make it compatible.
  * Source : https://github.com/cypress-io/cypress/issues/1752
  */
-
 export default class DndSimulatorDataTransfer {
     constructor() {
         this.data = {}

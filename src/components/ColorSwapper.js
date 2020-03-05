@@ -25,7 +25,7 @@ export default class ColorSwapper extends Component {
     this.handleReset = this.handleReset.bind(this);
   }
 
-  /* Init */
+  /* Initialization */
   componentDidMount() {
     this.resetGrid();
   }
@@ -36,6 +36,10 @@ export default class ColorSwapper extends Component {
     var cells = GridUtils.generateCells(numberOfCells, COLOR_MIN_VALUE, COLOR_MAX_VALUE);
     this.setState({ values: cells, history: [] });
   }
+
+  /**
+   * HANDLERS
+   */
 
   /* When a cell is dropped, process swap and save move into history */
   handleCellDrop(i, j) {
@@ -52,8 +56,8 @@ export default class ColorSwapper extends Component {
     }
   }
 
-   /* Swap the cells of the last move */
-   handleUndo() {
+  /* Swap the cells of the last move */
+  handleUndo() {
     if (this.state.history.length > 0) {
       const historyUpdated = [...this.state.history];
       const [i, j] = historyUpdated.pop();
@@ -69,30 +73,44 @@ export default class ColorSwapper extends Component {
     this.resetGrid();
   }
 
+  /**
+   * RENDER METHODS
+   */
 
-  render() {
+  /* Renders the grid */
+  renderGrid() {
+    return <ColorGrid width={GRID_WIDTH} height={GRID_HEIGHT}
+      values={this.state.values}
+      onCellDrop={this.handleCellDrop} />
+  }
+
+  /* Renders the action panel */
+  renderActions() {
     const areActionsDisabled = this.state.history.length === 0;
 
     return (
-      <div className="color-swapper">
+      <div className={'swapper-actions'}>
+        <button data-cy="undo-button" className="swapper-button" onClick={() => this.handleUndo()} disabled={areActionsDisabled}>
+          <span className="material-icons">restore</span>
+          Undo
+        </button>
 
+        <button data-cy="reset-button" className="swapper-button" onClick={() => this.handleReset()} disabled={areActionsDisabled}>
+          <span className="material-icons">replay</span>
+          Reset
+        </button>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div className="color-swapper">
         {/* Color Grid */}
-        <ColorGrid width={GRID_WIDTH} height={GRID_HEIGHT}
-          values={this.state.values}
-          onCellDrop={this.handleCellDrop} />
+        {this.renderGrid()}
 
         {/* Actions */}
-        <div className={'swapper-actions'}>
-          <button data-cy="undo-button" className="swapper-button" onClick={() => this.handleUndo()} disabled={areActionsDisabled}>
-            <span className="material-icons">restore</span>
-            Undo
-          </button>
-
-          <button data-cy="reset-button" className="swapper-button" onClick={() => this.handleReset()} disabled={areActionsDisabled}>
-            <span className="material-icons">replay</span>
-            Reset
-          </button>
-        </div>
+        {this.renderActions()}
       </div>
     )
   }
