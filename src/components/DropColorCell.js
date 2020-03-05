@@ -19,7 +19,7 @@ export default function DropColorCell(props) {
     drop: () => ({ index: props.index }),
     collect: monitor => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
+      canDrop: monitor.canDrop() && (monitor.getItem() && monitor.getItem().index !== props.index)
     }),
   })
 

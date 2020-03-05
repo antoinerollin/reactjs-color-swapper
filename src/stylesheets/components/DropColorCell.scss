@@ -3,12 +3,30 @@
 @import '../common/keyframes';
 
 .drop-color-cell {
+    position: relative;
+
     cursor: move;
-    display: inline-block;
     border : 2px solid white;
+
+    width: $cell-size;
+    height: $cell-size;
+
+    @media (max-width: $bs-max-xs) {
+        width: $cell-size-xs;
+        height: $cell-size-xs;
+    }
 
     &.droppable {
         animation: blink 1.5s linear infinite;
         border-color: black;
+
+        &:after {
+            @include flex(flex, center,center);
+            width:100%;
+            height:100%;
+    
+            @include material-icons;
+            content: 'gps_fixed';
+        }
     }
 }
