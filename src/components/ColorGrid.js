@@ -22,16 +22,18 @@ export default function ColorGrid(props) {
         {/* Rows */}
         {Array.from(Array(props.height).keys()).map((row) => {
           return (
-            <div key={row} className="color-grid-row">
+            <div key={row} data-cy="grid-row" className="color-grid-row">
+
               {/* Cells */}
               {Array.from(Array(props.width).keys()).map((col) => {
-                const index = row * (props.height) + col;
+                const index = row * (props.width) + col;
                 return (
                   <DropColorCell key={index} index={index} value={props.values[index]}>
                     <DragColorCell index={index} onDrop={props.onCellDrop} />
                   </DropColorCell>
                 )
               })}
+
             </div>
           )
         })}

@@ -8,6 +8,23 @@
         @include flex(flex, center, center);
     }
 
+    .swapper-configuration {
+
+        & > *:not(:last-child){
+            margin-right: 20px;
+        }
+
+        .swapper-select {
+            cursor: pointer;
+            background-color: $bg-color;
+            color: white;
+            border-radius: 3px;
+            padding: 4px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+
     .swapper-button {
         @include flex(flex, center, center);
 
@@ -35,5 +52,9 @@
         & + .swapper-button {
             margin-left: 10px;
         }
+    }
+
+    & > *:not(:last-child){
+        margin-bottom: 20px;
     }
 }

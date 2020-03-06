@@ -18,10 +18,10 @@ context('Color Swapper E2E Tests Suite', () => {
         cy.get(data.selectors.undoButton).should('be.disabled');
         cy.get(data.selectors.resetButton).should('be.disabled');
 
-        cy.getCellBgColor(1).then(firstCellBgColorBefore => {
+        cy.getCellColor(1).then(firstCellBgColorBefore => {
             cy.dragDrop(1, 1);
 
-            cy.getCellBgColor(1).should('eq', firstCellBgColorBefore);
+            cy.getCellColor(1).should('eq', firstCellBgColorBefore);
 
             cy.get(data.selectors.undoButton).should('be.disabled');
             cy.get(data.selectors.resetButton).should('be.disabled');
@@ -39,16 +39,14 @@ context('Color Swapper E2E Tests Suite', () => {
         cy.get(data.selectors.undoButton).should('be.disabled');
         cy.get(data.selectors.resetButton).should('be.disabled');
 
-        cy.getCellBgColor(1).then(firstCellBgColorBefore => {
-            cy.getCellBgColor(2).then(secondCellBgColorBefore => {
-                cy.dragDrop(1, 2);
+        cy.getCellColors(1, 2).then(cellsBgColorBefore => {
+            cy.dragDrop(1, 2);
 
-                cy.getCellBgColor(1).should('eq', secondCellBgColorBefore);
-                cy.getCellBgColor(2).should('eq', firstCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
 
-                cy.get(data.selectors.undoButton).should('not.be.disabled');
-                cy.get(data.selectors.resetButton).should('not.be.disabled');
-            });
+            cy.get(data.selectors.undoButton).should('not.be.disabled');
+            cy.get(data.selectors.resetButton).should('not.be.disabled');
         });
     });
 
@@ -64,80 +62,91 @@ context('Color Swapper E2E Tests Suite', () => {
      * => actions should become disabled after second undo
      */
     it('Undo action', () => {
-        cy.getCellBgColor(1).then(firstCellBgColorBefore => {
-            cy.getCellBgColor(2).then(secondCellBgColorBefore => {
-                cy.getCellBgColor(3).then(thirdCellBgColorBefore => {
+        cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
 
-                    cy.get(data.selectors.undoButton).should('be.disabled');
-                    cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(data.selectors.undoButton).should('be.disabled');
+            cy.get(data.selectors.resetButton).should('be.disabled');
 
-                    cy.dragDrop(1, 2);
-                    cy.dragDrop(1, 3);
+            cy.dragDrop(1, 2);
+            cy.dragDrop(1, 3);
 
-                    cy.getCellBgColor(1).should('eq', thirdCellBgColorBefore);
-                    cy.getCellBgColor(2).should('eq', firstCellBgColorBefore);
-                    cy.getCellBgColor(3).should('eq', secondCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[3]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
 
-                    cy.get(data.selectors.undoButton).should('not.be.disabled');
-                    cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(data.selectors.undoButton).should('not.be.disabled');
+            cy.get(data.selectors.resetButton).should('not.be.disabled');
 
-                    cy.get(data.selectors.undoButton).click();
+            cy.get(data.selectors.undoButton).click();
 
-                    cy.getCellBgColor(1).should('eq', secondCellBgColorBefore);
-                    cy.getCellBgColor(2).should('eq', firstCellBgColorBefore);
-                    cy.getCellBgColor(3).should('eq', thirdCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-                    cy.get(data.selectors.undoButton).should('not.be.disabled');
-                    cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(data.selectors.undoButton).should('not.be.disabled');
+            cy.get(data.selectors.resetButton).should('not.be.disabled');
 
-                    cy.get(data.selectors.undoButton).click();
+            cy.get(data.selectors.undoButton).click();
 
-                    cy.getCellBgColor(1).should('eq', firstCellBgColorBefore);
-                    cy.getCellBgColor(2).should('eq', secondCellBgColorBefore);
-                    cy.getCellBgColor(3).should('eq', thirdCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-                    cy.get(data.selectors.undoButton).should('be.disabled');
-                    cy.get(data.selectors.resetButton).should('be.disabled');
-                });
-            });
+            cy.get(data.selectors.undoButton).should('be.disabled');
+            cy.get(data.selectors.resetButton).should('be.disabled');
         });
     });
 
     /**
-     * Undo action
+     * Reset action
      * - swap cell n°1 with cell n°2, swap cell n°1 with cell n°3, then reset
      * => actions should become disabled
      * => grid should have its initial state
      */
     it('Reset action', () => {
-        cy.getCellBgColor(1).then(firstCellBgColorBefore => {
-            cy.getCellBgColor(2).then(secondCellBgColorBefore => {
-                cy.getCellBgColor(3).then(thirdCellBgColorBefore => {
+        cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
 
-                    cy.get(data.selectors.undoButton).should('be.disabled');
-                    cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(data.selectors.undoButton).should('be.disabled');
+            cy.get(data.selectors.resetButton).should('be.disabled');
 
-                    cy.dragDrop(1, 2);
-                    cy.dragDrop(1, 3);
+            cy.dragDrop(1, 2);
+            cy.dragDrop(1, 3);
 
-                    cy.get(data.selectors.undoButton).should('not.be.disabled');
-                    cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(data.selectors.undoButton).should('not.be.disabled');
+            cy.get(data.selectors.resetButton).should('not.be.disabled');
 
-                    cy.getCellBgColor(1).should('eq', thirdCellBgColorBefore);
-                    cy.getCellBgColor(2).should('eq', firstCellBgColorBefore);
-                    cy.getCellBgColor(3).should('eq', secondCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[3]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
 
-                    cy.get(data.selectors.resetButton).click();
+            cy.get(data.selectors.resetButton).click();
 
-                    cy.getCellBgColor(1).should('eq', firstCellBgColorBefore);
-                    cy.getCellBgColor(2).should('eq', secondCellBgColorBefore);
-                    cy.getCellBgColor(3).should('eq', thirdCellBgColorBefore);
+            cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-                    cy.get(data.selectors.undoButton).should('be.disabled');
-                    cy.get(data.selectors.resetButton).should('be.disabled');
-                });
-            });
+            cy.get(data.selectors.undoButton).should('be.disabled');
+            cy.get(data.selectors.resetButton).should('be.disabled');
         });
     });
+
+    /**
+     * Resize grid
+     * - select a width of 8 and a height of 9
+     * => grid should have 72 cells
+     * => grid should have 9 rows
+     * => each row should have 8 cells
+     */
+    it('Resize grid', () => {
+        var newWidth = 8, newHeight = 9;
+        var newSize = newWidth * newHeight;
+
+        cy.get(data.selectors.widthSelect).select(newWidth.toString());
+        cy.get(data.selectors.heightSelect).select(newHeight.toString());
+
+        cy.get(data.selectors.droppableCell).its('length').should('eq', newSize);
+        cy.get(data.selectors.gridRow).its('length').should('eq', newHeight);
+        cy.get(data.selectors.gridRow).first().find(data.selectors.droppableCell).its('length').should('eq', newWidth);
+    })
 
 });

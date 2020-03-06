@@ -20,21 +20,10 @@
     margin-top: 10%;
     margin-right: auto;
     margin-left: auto;
-
-    @media (min-width: $bs-min-lg) {
-        width: 1170px;
-    }
-    @media (min-width: $bs-min-md) {
-        width: 970px;
-    }
-    @media (min-width: $bs-min-sm) {
-        width: 750px;
-    }
 }
 
 @mixin material-icons {
     direction: ltr;
-    // display: inline-block;
     font-family: 'Material Icons';
     font-size: 24px;
     font-style: normal;

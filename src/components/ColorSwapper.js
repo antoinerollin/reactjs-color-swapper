@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import '../stylesheets/components/ColorSwapper.scss';
+import { COLOR_MAX_VALUE, COLOR_MIN_VALUE, GRID_DEFAULT_HEIGHT, GRID_DEFAULT_WIDTH, GRID_SIZE_MAX_VALUE } from '../utils/Constants';
 import GridUtils from '../utils/GridUtils';
 import ColorGrid from './ColorGrid';
-import { GRID_WIDTH, GRID_HEIGHT, COLOR_MIN_VALUE, COLOR_MAX_VALUE } from '../utils/Constants';
-import '../stylesheets/components/ColorSwapper.scss';
 
 /**
  * ColorSwapper component
@@ -16,6 +16,8 @@ export default class ColorSwapper extends Component {
     super();
 
     this.state = {
+      width: GRID_DEFAULT_WIDTH,
+      height: GRID_DEFAULT_HEIGHT,
       values: [],
       history: []
     }
@@ -23,6 +25,8 @@ export default class ColorSwapper extends Component {
     this.handleCellDrop = this.handleCellDrop.bind(this);
     this.handleUndo = this.handleUndo.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.handleWidthChange = this.handleWidthChange.bind(this);
+    this.handleHeightChange = this.handleHeightChange.bind(this);
   }
 
   /* Initialization */
@@ -32,14 +36,14 @@ export default class ColorSwapper extends Component {
 
   /* Generates a new grid */
   resetGrid() {
-    const numberOfCells = GRID_WIDTH * GRID_HEIGHT;
+    const numberOfCells = this.state.width * this.state.height;
     var cells = GridUtils.generateCells(numberOfCells, COLOR_MIN_VALUE, COLOR_MAX_VALUE);
     this.setState({ values: cells, history: [] });
   }
 
-  /**
-   * HANDLERS
-   */
+  /************
+   * HANDLERS *
+   ************/
 
   /* When a cell is dropped, process swap and save move into history */
   handleCellDrop(i, j) {
@@ -73,13 +77,53 @@ export default class ColorSwapper extends Component {
     this.resetGrid();
   }
 
-  /**
-   * RENDER METHODS
-   */
+  /* When width changes, generates a new grid */
+  handleWidthChange(e) {
+    this.setState({ width: parseInt(e.target.value) }, () => {
+      this.resetGrid();
+    })
+  }
+
+  /* When width changes, generates a new grid */
+  handleHeightChange(e) {
+    this.setState({ height: parseInt(e.target.value) }, () => {
+      this.resetGrid();
+    })
+  }
+
+  /******************
+   * RENDER METHODS *
+   ******************/
+
+  /* Renders the configuration panel */
+  renderConfiguration() {
+    return (
+      <div className="swapper-configuration">
+        {/* Width */}
+        {this.renderSizeSelect('width-select', this.state.width, this.handleWidthChange)}
+
+        <span>x</span>
+
+        {/* Height */}
+        {this.renderSizeSelect('height-select', this.state.height, this.handleHeightChange)}
+      </div>
+    )
+  }
+
+  /* Renders a number select for grid size configuration */
+  renderSizeSelect(id, value, onChangeFn) {
+    return (
+      <select data-cy={id} className="swapper-select" value={value} onChange={onChangeFn}>
+        {Array.from(Array(GRID_SIZE_MAX_VALUE).keys()).map(val => {
+          return (<option key={val} className="swapper-option" value={val + 1}>{val + 1}</option>)
+        })}
+      </select>
+    )
+  }
 
   /* Renders the grid */
   renderGrid() {
-    return <ColorGrid width={GRID_WIDTH} height={GRID_HEIGHT}
+    return <ColorGrid width={this.state.width} height={this.state.height}
       values={this.state.values}
       onCellDrop={this.handleCellDrop} />
   }
@@ -106,12 +150,16 @@ export default class ColorSwapper extends Component {
   render() {
     return (
       <div className="color-swapper">
+
+        {/*Configuration*/}
+        {this.renderConfiguration()}
+
         {/* Color Grid */}
         {this.renderGrid()}
 
         {/* Actions */}
         {this.renderActions()}
-      </div>
+      </div >
     )
   }
 }
