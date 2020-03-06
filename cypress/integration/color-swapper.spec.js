@@ -147,6 +147,9 @@ context('Color Swapper E2E Tests Suite', () => {
         cy.get(data.selectors.droppableCell).its('length').should('eq', newSize);
         cy.get(data.selectors.gridRow).its('length').should('eq', newHeight);
         cy.get(data.selectors.gridRow).first().find(data.selectors.droppableCell).its('length').should('eq', newWidth);
+
+        cy.get(data.selectors.undoButton).should('be.disabled');
+        cy.get(data.selectors.resetButton).should('be.disabled');
     })
 
 });

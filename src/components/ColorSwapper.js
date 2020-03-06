@@ -8,6 +8,7 @@ import ColorGrid from './ColorGrid';
  * ColorSwapper component
  * The color swapper contains a 4x4 grid of alternative cell colors.
  * This grid can be reordered by using drag and drop on cells.
+ * It can also be resized by the configuration panel
  * A move can be cancelled thanks to the undo button.
  * The grid can be reset thanks to the reset button.
  */
