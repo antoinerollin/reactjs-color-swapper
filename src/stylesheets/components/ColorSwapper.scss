@@ -19,6 +19,7 @@
         font-size: 14px;
         color: white;
         background-color: transparent;
+        cursor: pointer;
 
         span:first-child {
             font-size: 18px;
@@ -28,6 +29,7 @@
         &:disabled {
             background-color: $btn-bg-disabled;
             border-color: grey;
+            cursor: not-allowed;
         }
 
         & + .swapper-button {
