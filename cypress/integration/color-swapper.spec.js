@@ -18,6 +18,7 @@ context('Color Swapper E2E Tests Suite', () => {
     it('Swap a cell with itself', () => {
         cy.get(selectors.undoButton).should('be.disabled');
         cy.get(selectors.resetButton).should('be.disabled');
+        cy.get(selectors.reorderButton).should('be.disabled');
 
         cy.getCellColor(1).then(firstCellColorBefore => {
             cy.dragDrop(1, 1);
@@ -26,6 +27,7 @@ context('Color Swapper E2E Tests Suite', () => {
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
+            cy.get(selectors.reorderButton).should('be.disabled');
         });
     });
 
@@ -39,6 +41,7 @@ context('Color Swapper E2E Tests Suite', () => {
     it('Swap two different cells', () => {
         cy.get(selectors.undoButton).should('be.disabled');
         cy.get(selectors.resetButton).should('be.disabled');
+        cy.get(selectors.reorderButton).should('be.disabled');
 
         cy.getCellColors(1, 2).then(cellColorsBefore => {
             cy.dragDrop(1, 2);
@@ -48,6 +51,51 @@ context('Color Swapper E2E Tests Suite', () => {
 
             cy.get(selectors.undoButton).should('not.be.disabled');
             cy.get(selectors.resetButton).should('not.be.disabled');
+            cy.get(selectors.reorderButton).should('not.be.disabled');
+        });
+    });
+
+    /**
+    * Grid shuffle
+    * - click the shuffle button
+    * => grid should not have its initial state
+    */
+    it('Grid shuffle', () => {
+        cy.get(selectors.droppableCell).its('length').then(size => {
+            var allIndexes = Array.from(Array(size).keys());
+
+            cy.getCellColors(...allIndexes).then((cellColorsBefore) => {
+                cy.get(selectors.shuffleButton).click();
+                cy.getCellColors(...allIndexes).should('not.eq', cellColorsBefore);
+
+                cy.get(selectors.undoButton).should('be.disabled');
+                cy.get(selectors.resetButton).should('be.disabled');
+                cy.get(selectors.reorderButton).should('not.be.disabled');
+            })
+        });
+    });
+
+    /**
+     * Grid reordering
+     * - click the shuffle button
+     * => grid should not have its initial state (before shuffle and user swaps)
+     */
+    it('Grid reordering', () => {
+        cy.get(selectors.droppableCell).its('length').then(size => {
+            var allIndexes = Array.from(Array(size + 1).keys());
+
+            cy.getCellColors(...allIndexes).then((cellColorsBefore) => {
+
+                cy.get(selectors.shuffleButton).click();
+                cy.getCellColors(...allIndexes).should('not.eq', cellColorsBefore);
+
+                cy.get(selectors.reorderButton).click();
+                cy.checkCellRGBColors(cellColorsBefore);
+
+                cy.get(selectors.undoButton).should('be.disabled');
+                cy.get(selectors.resetButton).should('be.disabled');
+                cy.get(selectors.reorderButton).should('be.disabled');
+            })
         });
     });
 
@@ -102,9 +150,11 @@ context('Color Swapper E2E Tests Suite', () => {
      * Reset action
      * - swap cell n°1 with cell n°2, swap cell n°1 with cell n°3, then reset
      * => actions should become disabled
-     * => grid should have its initial state
+     * => grid should have its initial state (before user swap)
      */
     it('Reset action', () => {
+        cy.get(selectors.shuffleButton).click();
+
         cy.getCellColors(1, 2, 3).then(cellColorsBefore => {
 
             cy.get(selectors.undoButton).should('be.disabled');
@@ -175,22 +225,6 @@ context('Color Swapper E2E Tests Suite', () => {
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
 
-        });
-    });
-
-    /**
-     * Grid shuffle
-     * - click the shuffle button
-     * => grid should not have its initial state
-     */
-    it('Grid shuffle', () => {
-        cy.get(selectors.droppableCell).its('length').then(size => {
-            var allIndexes = Array.from(Array(size).keys());
-
-            cy.getCellColors(...allIndexes).then((cellColorsBefore) => {
-                cy.get(selectors.shuffleButton).click();
-                cy.getCellColors(...allIndexes).should('not.eq', cellColorsBefore);
-            })
         });
     });
 

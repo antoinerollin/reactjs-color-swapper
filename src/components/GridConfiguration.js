@@ -12,17 +12,10 @@ import '../stylesheets/components/GridConfiguration.scss';
 export default function GridConfiguration(props) {
 
   /* Renders the color pickers panel */
-  function renderColorSelection() {
+  function renderColorSelect(id, color, onChange) {
     return (
-      <div className="color-configuration">
-        <div className="color-select" data-cy="first-color-select">
-          <h4>First color</h4>
-          <TwitterPicker color={props.minColor} triangle="hide" colors={AVAILABLE_COLOR_VALUES} onChangeComplete={props.onMinColorChange} />
-        </div>
-        <div className="color-select" data-cy="last-color-select">
-          <h4>Last color</h4>
-          <TwitterPicker color={props.maxColor} triangle="hide" colors={AVAILABLE_COLOR_VALUES} onChangeComplete={props.onMaxColorChange} />
-        </div>
+      <div className="color-select" data-cy={id}>
+        <TwitterPicker color={color} colors={AVAILABLE_COLOR_VALUES} onChangeComplete={onChange} triangle="hide" />
       </div>
     )
   }
@@ -44,16 +37,21 @@ export default function GridConfiguration(props) {
       <h3>Settings</h3>
 
       {/* Color selection */}
-      {renderColorSelection()}
+      <div className="color-configuration">
+        <h4>First color</h4>
+        {renderColorSelect("first-color-select", props.minColor, (e) => props.onColorChange(e.rgb, props.maxColor))}
+        <h4>Last color</h4>
+        {renderColorSelect("last-color-select", props.maxColor, (e) => props.onColorChange(props.minColor, e.rgb))}
+      </div>
 
       <div className="size-configuration">
         <h4>Size</h4>
 
         {/* Width */}
-        {renderSizeSelect('width-select', props.width, props.onWidthChange)}
+        {renderSizeSelect('width-select', props.width, (e) => props.onSizeChange(parseInt(e.target.value), props.height))}
         <span className="size-divider">x</span>
         {/* Height */}
-        {renderSizeSelect('height-select', props.height, props.onHeightChange)}
+        {renderSizeSelect('height-select', props.height, (e) => props.onSizeChange(props.width, parseInt(e.target.value)))}
       </div>
     </div >
   )

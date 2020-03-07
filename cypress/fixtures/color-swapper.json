@@ -7,6 +7,7 @@
     "draggableCell": "[data-cy=draggable-cell]",
     "droppableCell": "[data-cy=droppable-cell]",
     "shuffleButton": "[data-cy=shuffle-button]",
+    "reorderButton": "[data-cy=reorder-button]",
     "undoButton": "[data-cy=undo-button]",
     "resetButton": "[data-cy=reset-button]",
     "widthSelect": "[data-cy=width-select]",

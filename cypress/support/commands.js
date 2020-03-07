@@ -24,7 +24,7 @@ Cypress.Commands.add('dragDrop', (sourceIndex, targetIndex) => {
  * Retrieve the background color of the (index) cell
  */
 Cypress.Commands.add('getCellColor', (index) => {
-    var bgColor = Cypress.$(Cypress.$(selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
+    var bgColor = Cypress.$(Cypress.$(selectors.droppableCell)[index - 1]).css('background-color');
     return cy.wrap(bgColor);
 });
 
@@ -35,7 +35,7 @@ Cypress.Commands.add('getCellColors', (...indexes) => {
     var values = [];
 
     indexes.forEach(index => {
-        values[index] = Cypress.$(Cypress.$(selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
+        values[index] = Cypress.$(Cypress.$(selectors.droppableCell)[index - 1]).css('background-color');
     })
 
     return cy.wrap(values);
@@ -43,6 +43,20 @@ Cypress.Commands.add('getCellColors', (...indexes) => {
 
 Cypress.Commands.add('checkCellRGBColor', (index, rgb) => {
     cy.get(selectors.droppableCell).its(index - 1).should('have.css', 'background-color').and('eq', rgb);
+});
+
+Cypress.Commands.add('checkCellRGBColors', (colors) => {
+    cy.get(selectors.droppableCell).its('length').then(size => {
+        var allIndexes = Array.from(Array(size + 1).keys());
+
+        cy.getCellColors(...allIndexes).then(currentColors => {
+            for (var i = 0; i < currentColors.length; i++) {
+                if (colors[i + 1]) {
+                    cy.checkCellRGBColor(i + 1, colors[i + 1]);
+                }
+            }
+        })
+    });
 });
 
 

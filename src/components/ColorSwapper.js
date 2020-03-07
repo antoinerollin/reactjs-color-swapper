@@ -24,18 +24,20 @@ export default class ColorSwapper extends Component {
       width: GRID_DEFAULT_WIDTH,
       height: GRID_DEFAULT_HEIGHT,
       values: [],
-      history: []
+      history: [],
+      canReorder: false
     }
 
     this.handleCellDrop = this.handleCellDrop.bind(this);
     this.handleShuffle = this.handleShuffle.bind(this);
+    this.handleReorder = this.handleReorder.bind(this);
     this.handleUndo = this.handleUndo.bind(this);
     this.handleReset = this.handleReset.bind(this);
-    this.handleWidthChange = this.handleWidthChange.bind(this);
-    this.handleHeightChange = this.handleHeightChange.bind(this);
+    this.handleSizeChange = this.handleSizeChange.bind(this);
+    this.handleColorChange = this.handleColorChange.bind(this);
   }
 
-  /* Initialization */
+  /* After page load */
   componentDidMount() {
     this.resetGrid();
   }
@@ -44,7 +46,7 @@ export default class ColorSwapper extends Component {
   resetGrid() {
     const numberOfCells = this.state.width * this.state.height;
     var cells = GridUtils.generateCellsRgb(numberOfCells, this.state.minColor, this.state.maxColor);
-    this.setState({ values: cells, history: [] });
+    this.setState({ values: cells, history: [], canReorder: false });
   }
 
   /************
@@ -61,7 +63,8 @@ export default class ColorSwapper extends Component {
 
       this.setState({
         values: swappedGrid,
-        history: historyUpdated
+        history: historyUpdated,
+        canReorder: true
       });
     }
   }
@@ -88,33 +91,24 @@ export default class ColorSwapper extends Component {
   /* Random swaps on current grid on shuffle */
   handleShuffle() {
     var shuffledgrid = GridUtils.shuffle([...this.state.values]);
-    this.setState({ values: shuffledgrid });
+    this.setState({ values: shuffledgrid, canReorder: true });
   }
 
-  /* When width changes, generates a new grid */
-  handleWidthChange(e) {
-    this.setState({ width: parseInt(e.target.value) }, () => {
+  /* Random swaps on current grid on shuffle */
+  handleReorder() {
+    this.resetGrid();
+  }
+
+  /* When size is change, generates a new rgid */
+  handleSizeChange(width, height) {
+    this.setState({ width: width, height: height }, () => {
       this.resetGrid();
     })
   }
 
-  /* When width changes, generates a new grid */
-  handleHeightChange(e) {
-    this.setState({ height: parseInt(e.target.value) }, () => {
-      this.resetGrid();
-    })
-  }
-
-  /* When first color is changed, generates a new grid */
-  handleMinColorChange = (color) => {
-    this.setState({ minColor: color.rgb }, () => {
-      this.resetGrid();
-    });
-  };
-
-  /* When last color is changed, generates a new grid */
-  handleMaxColorChange = (color) => {
-    this.setState({ maxColor: color.rgb }, () => {
+  /* When colors are changed, generates a new grid */
+  handleColorChange(minColor, maxColor) {
+    this.setState({ minColor: minColor, maxColor: maxColor }, () => {
       this.resetGrid();
     });
   };
@@ -128,11 +122,9 @@ export default class ColorSwapper extends Component {
     return (
       <GridConfiguration
         minColor={this.state.minColor} maxColor={this.state.maxColor}
-        onMinColorChange={this.handleMinColorChange}
-        onMaxColorChange={this.handleMaxColorChange}
+        onColorChange={this.handleColorChange}
         width={this.state.width} height={this.state.height}
-        onWidthChange={this.handleWidthChange}
-        onHeightChange={this.handleHeightChange} />
+        onSizeChange={this.handleSizeChange} />
     )
   }
 
@@ -150,6 +142,7 @@ export default class ColorSwapper extends Component {
     return (
       <div className="swapper-actions">
         <SwapperButton dataCy="shuffle-button" text="Shuffle" icon="cached" onClick={this.handleShuffle} />
+        <SwapperButton dataCy="reorder-button" text="Reorder" icon="blur_on" onClick={this.handleReorder} disabled={!this.state.canReorder} />
         <SwapperButton dataCy="undo-button" text="Undo" icon="restore" onClick={this.handleUndo} disabled={areActionsDisabled} />
         <SwapperButton dataCy="reset-button" text="Reset" icon="replay" onClick={this.handleReset} disabled={areActionsDisabled} />
       </div>
