@@ -4,6 +4,7 @@ import { COLOR_DEFAULT_MAX_VALUE_RGB, COLOR_DEFAULT_MIN_VALUE_RGB, GRID_DEFAULT_
 import GridUtils from '../utils/GridUtils';
 import ColorGrid from './ColorGrid';
 import GridConfiguration from './GridConfiguration';
+import SwapperButton from './SwapperButton';
 
 /**
  * ColorSwapper component
@@ -27,6 +28,7 @@ export default class ColorSwapper extends Component {
     }
 
     this.handleCellDrop = this.handleCellDrop.bind(this);
+    this.handleShuffle = this.handleShuffle.bind(this);
     this.handleUndo = this.handleUndo.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleWidthChange = this.handleWidthChange.bind(this);
@@ -65,20 +67,28 @@ export default class ColorSwapper extends Component {
   }
 
   /* Swap the cells of the last move */
-  handleUndo() {
+  handleUndo(callbackFn) {
     if (this.state.history.length > 0) {
       const historyUpdated = [...this.state.history];
       const [i, j] = historyUpdated.pop();
 
       const swappedGrid = GridUtils.swap([...this.state.values], i, j);
 
-      this.setState({ values: swappedGrid, history: historyUpdated });
+      this.setState({ values: swappedGrid, history: historyUpdated }, callbackFn);
     }
   }
 
-  /* Generates a new grid */
+  /* Undo recursively all the history, on reset. */
   handleReset() {
-    this.resetGrid();
+    if (this.state.history.length > 0) {
+      this.handleUndo(() => this.handleReset());
+    }
+  }
+
+  /* Random swaps on current grid on shuffle */
+  handleShuffle() {
+    var shuffledgrid = GridUtils.shuffle([...this.state.values]);
+    this.setState({ values: shuffledgrid });
   }
 
   /* When width changes, generates a new grid */
@@ -138,16 +148,10 @@ export default class ColorSwapper extends Component {
     const areActionsDisabled = this.state.history.length === 0;
 
     return (
-      <div className={'swapper-actions'}>
-        <button data-cy="undo-button" className="swapper-button" onClick={() => this.handleUndo()} disabled={areActionsDisabled}>
-          <span className="material-icons">restore</span>
-          Undo
-        </button>
-
-        <button data-cy="reset-button" className="swapper-button" onClick={() => this.handleReset()} disabled={areActionsDisabled}>
-          <span className="material-icons">replay</span>
-          Reset
-        </button>
+      <div className="swapper-actions">
+        <SwapperButton dataCy="shuffle-button" text="Shuffle" icon="cached" onClick={this.handleShuffle} />
+        <SwapperButton dataCy="undo-button" text="Undo" icon="restore" onClick={this.handleUndo} disabled={areActionsDisabled} />
+        <SwapperButton dataCy="reset-button" text="Reset" icon="replay" onClick={this.handleReset} disabled={areActionsDisabled} />
       </div>
     )
   }

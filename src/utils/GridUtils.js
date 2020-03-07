@@ -53,4 +53,17 @@ export default class GridUtils {
     [grid[i], grid[j]] = [grid[j], grid[i]];
     return grid;
   }
+
+  /**
+   * Process [grid].length * 2 swaps
+   */
+  static shuffle(grid) {
+    for (var n = 0; n < grid.length * 2; n++) {
+      var i = Math.floor(Math.random() * Math.floor(grid.length));
+      var j = Math.floor(Math.random() * Math.floor(grid.length));
+      this.swap(grid, i, j);
+    }
+
+    return grid;
+  }
 }

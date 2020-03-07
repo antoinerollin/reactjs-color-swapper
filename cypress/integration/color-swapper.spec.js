@@ -19,10 +19,10 @@ context('Color Swapper E2E Tests Suite', () => {
         cy.get(selectors.undoButton).should('be.disabled');
         cy.get(selectors.resetButton).should('be.disabled');
 
-        cy.getCellColor(1).then(firstCellBgColorBefore => {
+        cy.getCellColor(1).then(firstCellColorBefore => {
             cy.dragDrop(1, 1);
 
-            cy.getCellColor(1).should('eq', firstCellBgColorBefore);
+            cy.getCellColor(1).should('eq', firstCellColorBefore);
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
@@ -40,11 +40,11 @@ context('Color Swapper E2E Tests Suite', () => {
         cy.get(selectors.undoButton).should('be.disabled');
         cy.get(selectors.resetButton).should('be.disabled');
 
-        cy.getCellColors(1, 2).then(cellsBgColorBefore => {
+        cy.getCellColors(1, 2).then(cellColorsBefore => {
             cy.dragDrop(1, 2);
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[2]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[1]);
 
             cy.get(selectors.undoButton).should('not.be.disabled');
             cy.get(selectors.resetButton).should('not.be.disabled');
@@ -63,7 +63,7 @@ context('Color Swapper E2E Tests Suite', () => {
      * => actions should become disabled after second undo
      */
     it('Undo action', () => {
-        cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
+        cy.getCellColors(1, 2, 3).then(cellColorsBefore => {
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
@@ -71,27 +71,27 @@ context('Color Swapper E2E Tests Suite', () => {
             cy.dragDrop(1, 2);
             cy.dragDrop(1, 3);
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[3]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
-            cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[3]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[1]);
+            cy.getCellColor(3).should('eq', cellColorsBefore[2]);
 
             cy.get(selectors.undoButton).should('not.be.disabled');
             cy.get(selectors.resetButton).should('not.be.disabled');
 
             cy.get(selectors.undoButton).click();
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
-            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[2]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[1]);
+            cy.getCellColor(3).should('eq', cellColorsBefore[3]);
 
             cy.get(selectors.undoButton).should('not.be.disabled');
             cy.get(selectors.resetButton).should('not.be.disabled');
 
             cy.get(selectors.undoButton).click();
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
-            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[1]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[2]);
+            cy.getCellColor(3).should('eq', cellColorsBefore[3]);
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
@@ -105,7 +105,7 @@ context('Color Swapper E2E Tests Suite', () => {
      * => grid should have its initial state
      */
     it('Reset action', () => {
-        cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
+        cy.getCellColors(1, 2, 3).then(cellColorsBefore => {
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
@@ -116,15 +116,15 @@ context('Color Swapper E2E Tests Suite', () => {
             cy.get(selectors.undoButton).should('not.be.disabled');
             cy.get(selectors.resetButton).should('not.be.disabled');
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[3]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
-            cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[3]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[1]);
+            cy.getCellColor(3).should('eq', cellColorsBefore[2]);
 
             cy.get(selectors.resetButton).click();
 
-            cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
-            cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
-            cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
+            cy.getCellColor(1).should('eq', cellColorsBefore[1]);
+            cy.getCellColor(2).should('eq', cellColorsBefore[2]);
+            cy.getCellColor(3).should('eq', cellColorsBefore[3]);
 
             cy.get(selectors.undoButton).should('be.disabled');
             cy.get(selectors.resetButton).should('be.disabled');
@@ -156,23 +156,42 @@ context('Color Swapper E2E Tests Suite', () => {
 
     /**
      * Grid color selection
-     * - Insert #FFFFFF (white) as first cell color, and #000000 (black) as last cell color
-     * => First cell should be white 
-     * => Last cell should be black 
+     * - insert #FFFFFF (white) as first cell color, and #000000 (black) as last cell color
+     * => first cell should be white 
+     * => last cell should be black 
      * => actions should be disabled
      */
     it('Grid color selection', () => {
+        cy.get(selectors.droppableCell).its('length').then(size => {
 
-        cy.get(selectors.firstColorSelect).clear().type('FFFFFF');
-        cy.wait(100);
-        cy.checkCellRGBColor(1, 'rgb(255, 255, 255)');
+            cy.get(selectors.firstColorSelect).clear().type('FFFFFF');
+            cy.wait(100);
+            cy.checkCellRGBColor(1, 'rgb(255, 255, 255)');
 
-        cy.get(selectors.lastColorSelect).clear().type('000000');
-        cy.wait(100);
-        cy.checkCellRGBColor(16, 'rgb(0, 0, 0)');
+            cy.get(selectors.lastColorSelect).clear().type('000000');
+            cy.wait(100);
+            cy.checkCellRGBColor(size, 'rgb(0, 0, 0)');
 
-        cy.get(selectors.undoButton).should('be.disabled');
-        cy.get(selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
+
+        });
+    });
+
+    /**
+     * Grid shuffle
+     * - click the shuffle button
+     * => grid should not have its initial state
+     */
+    it('Grid shuffle', () => {
+        cy.get(selectors.droppableCell).its('length').then(size => {
+            var allIndexes = Array.from(Array(size).keys());
+
+            cy.getCellColors(...allIndexes).then((cellColorsBefore) => {
+                cy.get(selectors.shuffleButton).click();
+                cy.getCellColors(...allIndexes).should('not.eq', cellColorsBefore);
+            })
+        });
     });
 
 });

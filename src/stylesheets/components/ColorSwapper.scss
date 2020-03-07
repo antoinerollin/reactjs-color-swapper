@@ -8,37 +8,16 @@
         @include flex(flex, center, center, column);
     }
 
+    .swapper-left, .swapper-right {
+        @include flex(flex, center, center, column);
+    }
+
     .swapper-actions {
         margin-top: 20px;
         @include flex(flex, center, center);
     }
 
-    .swapper-button {
-        @include flex(flex, center, center);
-
-        font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        padding: 4px 8px;
-        border: 1px solid white;
-        border-radius: 3px;
-
-        font-size: 14px;
-        color: white;
-        background-color: transparent;
-        cursor: pointer;
-
-        span:first-child {
-            font-size: 18px;
-            margin-right:4px;
-        }
-
-        &:disabled {
-            background-color: $btn-bg-disabled;
-            border-color: grey;
-            cursor: not-allowed;
-        }
-
-        & + .swapper-button {
-            margin-left: 10px;
-        }
+    .swapper-button + .swapper-button {
+        margin-left: 10px;
     }
 }
