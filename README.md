@@ -24,5 +24,6 @@ Run the following command to run end-to-end tests:
 
 ## Main dependencies
 * react-dnd: library for drag and drop components for ReactJS applications
+* react-color: library for color selection for ReactJS applications
 * node-sass: library for SASS stylesheets declaration
 * cypress: framework for end-to-end tests definition

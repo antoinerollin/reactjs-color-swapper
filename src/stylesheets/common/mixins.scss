@@ -17,9 +17,20 @@
     padding-right: 15px;
     padding-left: 15px;
 
-    margin-top: 10%;
-    margin-right: auto;
-    margin-left: auto;
+    margin: 5% auto;
+    width: auto;
+
+    @media (min-width: $bs-min-sm) {
+        width:750px
+    }
+    
+    @media (min-width: $bs-min-md) {
+        width:970px
+    }
+    
+    @media (min-width: $bs-min-lg) {
+        width:1170px
+    }
 }
 
 @mixin material-icons {

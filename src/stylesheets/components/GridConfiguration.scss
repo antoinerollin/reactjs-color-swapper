@@ -1,0 +1,32 @@
+@import '../common/mixins';
+@import '../common/constants';
+
+.grid-configuration {
+
+    .color-configuration {
+       .color-select { 
+           margin-bottom: 30px;
+        }
+
+        .twitter-picker {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: 2px solid white !important; 
+        }
+    }
+
+    .size-divider {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .swapper-select {
+        cursor: pointer;
+        background-color: $bg-color;
+        color: white;
+        border-radius: 3px;
+        padding: 4px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+}

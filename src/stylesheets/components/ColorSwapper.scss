@@ -2,27 +2,15 @@
 @import '../common/constants';
 
 .color-swapper {
-    @include flex(flex, center, center, column);
+    @include flex(flex, center, space-around, row);
 
-    .swapper-actions {
-        @include flex(flex, center, center);
+    @media(max-width: $bs-max-sm){
+        @include flex(flex, center, center, column);
     }
 
-    .swapper-configuration {
-
-        & > *:not(:last-child){
-            margin-right: 20px;
-        }
-
-        .swapper-select {
-            cursor: pointer;
-            background-color: $bg-color;
-            color: white;
-            border-radius: 3px;
-            padding: 4px;
-            font-weight: bold;
-            font-size: 18px;
-        }
+    .swapper-actions {
+        margin-top: 20px;
+        @include flex(flex, center, center);
     }
 
     .swapper-button {
@@ -52,9 +40,5 @@
         & + .swapper-button {
             margin-left: 10px;
         }
-    }
-
-    & > *:not(:last-child){
-        margin-bottom: 20px;
     }
 }

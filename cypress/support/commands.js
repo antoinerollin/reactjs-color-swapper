@@ -1,6 +1,6 @@
 import DndSimulatorDataTransfer from './DndSimulatorDataTransfer';
 
-const data = require('../fixtures/color-swapper');
+const selectors = require('../fixtures/color-swapper').selectors;
 
 /**
  * Drag the (sourceIndex) cell and drop it on the (targetIndex) cell
@@ -8,12 +8,12 @@ const data = require('../fixtures/color-swapper');
 Cypress.Commands.add('dragDrop', (sourceIndex, targetIndex) => {
     const dataTransfer = new DndSimulatorDataTransfer()
 
-    cy.get(data.selectors.draggableCell).its(sourceIndex - 1)
+    cy.get(selectors.draggableCell).its(sourceIndex - 1)
         .trigger('mousedown', { which: 1 })
         .trigger('dragstart', { dataTransfer })
         .trigger('drag', {})
 
-    cy.get(data.selectors.droppableCell).its(targetIndex - 1)
+    cy.get(selectors.droppableCell).its(targetIndex - 1)
         .trigger('dragover', { dataTransfer })
         .trigger('drop', { dataTransfer })
         .trigger('dragend', { dataTransfer })
@@ -24,7 +24,7 @@ Cypress.Commands.add('dragDrop', (sourceIndex, targetIndex) => {
  * Retrieve the background color of the (index) cell
  */
 Cypress.Commands.add('getCellColor', (index) => {
-    var bgColor = Cypress.$(Cypress.$(data.selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
+    var bgColor = Cypress.$(Cypress.$(selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
     return cy.wrap(bgColor);
 });
 
@@ -35,10 +35,14 @@ Cypress.Commands.add('getCellColors', (...indexes) => {
     var values = [];
 
     indexes.forEach(index => {
-        values[index] = Cypress.$(Cypress.$(data.selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
+        values[index] = Cypress.$(Cypress.$(selectors.droppableCell + ':nth-child(' + index + ')')[0]).css('background-color');
     })
 
     return cy.wrap(values);
+});
+
+Cypress.Commands.add('checkCellRGBColor', (index, rgb) => {
+    cy.get(selectors.droppableCell).its(index - 1).should('have.css', 'background-color').and('eq', rgb);
 });
 
 

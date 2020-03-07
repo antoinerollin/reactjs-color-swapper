@@ -3,6 +3,7 @@
  */
 context('Color Swapper E2E Tests Suite', () => {
     const data = require('../fixtures/color-swapper');
+    const selectors = data.selectors;
 
     beforeEach(() => {
         cy.visit(data.pages.root);
@@ -15,16 +16,16 @@ context('Color Swapper E2E Tests Suite', () => {
      * => actions should stay disable all along
      */
     it('Swap a cell with itself', () => {
-        cy.get(data.selectors.undoButton).should('be.disabled');
-        cy.get(data.selectors.resetButton).should('be.disabled');
+        cy.get(selectors.undoButton).should('be.disabled');
+        cy.get(selectors.resetButton).should('be.disabled');
 
         cy.getCellColor(1).then(firstCellBgColorBefore => {
             cy.dragDrop(1, 1);
 
             cy.getCellColor(1).should('eq', firstCellBgColorBefore);
 
-            cy.get(data.selectors.undoButton).should('be.disabled');
-            cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
         });
     });
 
@@ -36,8 +37,8 @@ context('Color Swapper E2E Tests Suite', () => {
      * => actions should become enabled
      */
     it('Swap two different cells', () => {
-        cy.get(data.selectors.undoButton).should('be.disabled');
-        cy.get(data.selectors.resetButton).should('be.disabled');
+        cy.get(selectors.undoButton).should('be.disabled');
+        cy.get(selectors.resetButton).should('be.disabled');
 
         cy.getCellColors(1, 2).then(cellsBgColorBefore => {
             cy.dragDrop(1, 2);
@@ -45,8 +46,8 @@ context('Color Swapper E2E Tests Suite', () => {
             cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
             cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
 
-            cy.get(data.selectors.undoButton).should('not.be.disabled');
-            cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(selectors.undoButton).should('not.be.disabled');
+            cy.get(selectors.resetButton).should('not.be.disabled');
         });
     });
 
@@ -64,8 +65,8 @@ context('Color Swapper E2E Tests Suite', () => {
     it('Undo action', () => {
         cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
 
-            cy.get(data.selectors.undoButton).should('be.disabled');
-            cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
 
             cy.dragDrop(1, 2);
             cy.dragDrop(1, 3);
@@ -74,26 +75,26 @@ context('Color Swapper E2E Tests Suite', () => {
             cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
             cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
 
-            cy.get(data.selectors.undoButton).should('not.be.disabled');
-            cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(selectors.undoButton).should('not.be.disabled');
+            cy.get(selectors.resetButton).should('not.be.disabled');
 
-            cy.get(data.selectors.undoButton).click();
+            cy.get(selectors.undoButton).click();
 
             cy.getCellColor(1).should('eq', cellsBgColorBefore[2]);
             cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
             cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-            cy.get(data.selectors.undoButton).should('not.be.disabled');
-            cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(selectors.undoButton).should('not.be.disabled');
+            cy.get(selectors.resetButton).should('not.be.disabled');
 
-            cy.get(data.selectors.undoButton).click();
+            cy.get(selectors.undoButton).click();
 
             cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
             cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
             cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-            cy.get(data.selectors.undoButton).should('be.disabled');
-            cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
         });
     });
 
@@ -106,50 +107,72 @@ context('Color Swapper E2E Tests Suite', () => {
     it('Reset action', () => {
         cy.getCellColors(1, 2, 3).then(cellsBgColorBefore => {
 
-            cy.get(data.selectors.undoButton).should('be.disabled');
-            cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
 
             cy.dragDrop(1, 2);
             cy.dragDrop(1, 3);
 
-            cy.get(data.selectors.undoButton).should('not.be.disabled');
-            cy.get(data.selectors.resetButton).should('not.be.disabled');
+            cy.get(selectors.undoButton).should('not.be.disabled');
+            cy.get(selectors.resetButton).should('not.be.disabled');
 
             cy.getCellColor(1).should('eq', cellsBgColorBefore[3]);
             cy.getCellColor(2).should('eq', cellsBgColorBefore[1]);
             cy.getCellColor(3).should('eq', cellsBgColorBefore[2]);
 
-            cy.get(data.selectors.resetButton).click();
+            cy.get(selectors.resetButton).click();
 
             cy.getCellColor(1).should('eq', cellsBgColorBefore[1]);
             cy.getCellColor(2).should('eq', cellsBgColorBefore[2]);
             cy.getCellColor(3).should('eq', cellsBgColorBefore[3]);
 
-            cy.get(data.selectors.undoButton).should('be.disabled');
-            cy.get(data.selectors.resetButton).should('be.disabled');
+            cy.get(selectors.undoButton).should('be.disabled');
+            cy.get(selectors.resetButton).should('be.disabled');
         });
     });
 
     /**
-     * Resize grid
+     * Grid resizing
      * - select a width of 8 and a height of 9
      * => grid should have 72 cells
      * => grid should have 9 rows
      * => each row should have 8 cells
+     * => actions should be disabled
      */
-    it('Resize grid', () => {
+    it('Grid resizing', () => {
         var newWidth = 8, newHeight = 9;
         var newSize = newWidth * newHeight;
 
-        cy.get(data.selectors.widthSelect).select(newWidth.toString());
-        cy.get(data.selectors.heightSelect).select(newHeight.toString());
+        cy.get(selectors.widthSelect).select(newWidth.toString());
+        cy.get(selectors.heightSelect).select(newHeight.toString());
 
-        cy.get(data.selectors.droppableCell).its('length').should('eq', newSize);
-        cy.get(data.selectors.gridRow).its('length').should('eq', newHeight);
-        cy.get(data.selectors.gridRow).first().find(data.selectors.droppableCell).its('length').should('eq', newWidth);
+        cy.get(selectors.droppableCell).its('length').should('eq', newSize);
+        cy.get(selectors.gridRow).its('length').should('eq', newHeight);
+        cy.get(selectors.gridRow).first().find(selectors.droppableCell).its('length').should('eq', newWidth);
 
-        cy.get(data.selectors.undoButton).should('be.disabled');
-        cy.get(data.selectors.resetButton).should('be.disabled');
+        cy.get(selectors.undoButton).should('be.disabled');
+        cy.get(selectors.resetButton).should('be.disabled');
     })
+
+    /**
+     * Grid color selection
+     * - Insert #FFFFFF (white) as first cell color, and #000000 (black) as last cell color
+     * => First cell should be white 
+     * => Last cell should be black 
+     * => actions should be disabled
+     */
+    it('Grid color selection', () => {
+
+        cy.get(selectors.firstColorSelect).clear().type('FFFFFF');
+        cy.wait(100);
+        cy.checkCellRGBColor(1, 'rgb(255, 255, 255)');
+
+        cy.get(selectors.lastColorSelect).clear().type('000000');
+        cy.wait(100);
+        cy.checkCellRGBColor(16, 'rgb(0, 0, 0)');
+
+        cy.get(selectors.undoButton).should('be.disabled');
+        cy.get(selectors.resetButton).should('be.disabled');
+    });
 
 });

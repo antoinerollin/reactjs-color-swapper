@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import '../stylesheets/components/ColorSwapper.scss';
-import { COLOR_MAX_VALUE, COLOR_MIN_VALUE, GRID_DEFAULT_HEIGHT, GRID_DEFAULT_WIDTH, GRID_SIZE_MAX_VALUE } from '../utils/Constants';
+import { COLOR_DEFAULT_MAX_VALUE_RGB, COLOR_DEFAULT_MIN_VALUE_RGB, GRID_DEFAULT_HEIGHT, GRID_DEFAULT_WIDTH } from '../utils/Constants';
 import GridUtils from '../utils/GridUtils';
 import ColorGrid from './ColorGrid';
+import GridConfiguration from './GridConfiguration';
 
 /**
  * ColorSwapper component
  * The color swapper contains a 4x4 grid of alternative cell colors.
- * This grid can be reordered by using drag and drop on cells.
- * It can also be resized by the configuration panel
+ * Grid can be configured through the GridConfiguration component (i.e. GridConfiguration.js).
+ * It can also be reordered by using drag and drop on cells.
  * A move can be cancelled thanks to the undo button.
  * The grid can be reset thanks to the reset button.
  */
@@ -17,6 +18,8 @@ export default class ColorSwapper extends Component {
     super();
 
     this.state = {
+      minColor: COLOR_DEFAULT_MIN_VALUE_RGB,
+      maxColor: COLOR_DEFAULT_MAX_VALUE_RGB,
       width: GRID_DEFAULT_WIDTH,
       height: GRID_DEFAULT_HEIGHT,
       values: [],
@@ -38,7 +41,7 @@ export default class ColorSwapper extends Component {
   /* Generates a new grid */
   resetGrid() {
     const numberOfCells = this.state.width * this.state.height;
-    var cells = GridUtils.generateCells(numberOfCells, COLOR_MIN_VALUE, COLOR_MAX_VALUE);
+    var cells = GridUtils.generateCellsRgb(numberOfCells, this.state.minColor, this.state.maxColor);
     this.setState({ values: cells, history: [] });
   }
 
@@ -92,6 +95,20 @@ export default class ColorSwapper extends Component {
     })
   }
 
+  /* When first color is changed, generates a new grid */
+  handleMinColorChange = (color) => {
+    this.setState({ minColor: color.rgb }, () => {
+      this.resetGrid();
+    });
+  };
+
+  /* When last color is changed, generates a new grid */
+  handleMaxColorChange = (color) => {
+    this.setState({ maxColor: color.rgb }, () => {
+      this.resetGrid();
+    });
+  };
+
   /******************
    * RENDER METHODS *
    ******************/
@@ -99,26 +116,13 @@ export default class ColorSwapper extends Component {
   /* Renders the configuration panel */
   renderConfiguration() {
     return (
-      <div className="swapper-configuration">
-        {/* Width */}
-        {this.renderSizeSelect('width-select', this.state.width, this.handleWidthChange)}
-
-        <span>x</span>
-
-        {/* Height */}
-        {this.renderSizeSelect('height-select', this.state.height, this.handleHeightChange)}
-      </div>
-    )
-  }
-
-  /* Renders a number select for grid size configuration */
-  renderSizeSelect(id, value, onChangeFn) {
-    return (
-      <select data-cy={id} className="swapper-select" value={value} onChange={onChangeFn}>
-        {Array.from(Array(GRID_SIZE_MAX_VALUE).keys()).map(val => {
-          return (<option key={val} className="swapper-option" value={val + 1}>{val + 1}</option>)
-        })}
-      </select>
+      <GridConfiguration
+        minColor={this.state.minColor} maxColor={this.state.maxColor}
+        onMinColorChange={this.handleMinColorChange}
+        onMaxColorChange={this.handleMaxColorChange}
+        width={this.state.width} height={this.state.height}
+        onWidthChange={this.handleWidthChange}
+        onHeightChange={this.handleHeightChange} />
     )
   }
 
@@ -152,15 +156,22 @@ export default class ColorSwapper extends Component {
     return (
       <div className="color-swapper">
 
-        {/*Configuration*/}
-        {this.renderConfiguration()}
+        <div className="swapper-left">
+          <h3>Color Grid</h3>
 
-        {/* Color Grid */}
-        {this.renderGrid()}
+          {/* Color Grid */}
+          {this.renderGrid()}
 
-        {/* Actions */}
-        {this.renderActions()}
-      </div >
+          {/* Actions */}
+          {this.renderActions()}
+        </div>
+
+        <div className="swapper-right">
+          {/*Configuration*/}
+          {this.renderConfiguration()}
+        </div>
+
+      </div>
     )
   }
 }

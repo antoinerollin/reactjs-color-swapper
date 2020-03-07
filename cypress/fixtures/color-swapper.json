@@ -9,6 +9,8 @@
     "undoButton": "[data-cy=undo-button]",
     "resetButton": "[data-cy=reset-button]",
     "widthSelect": "[data-cy=width-select]",
-    "heightSelect": "[data-cy=height-select]"
+    "heightSelect": "[data-cy=height-select]",
+    "firstColorSelect": "[data-cy=first-color-select] input",
+    "lastColorSelect": "[data-cy=last-color-select] input"
   }
 }
